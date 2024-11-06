@@ -10,7 +10,7 @@
 const $targetEl = document.getElementById('drawer-js-example');
 
 
-console.log($targetEl);
+// console.log($targetEl);
 
 // options with default values
 const options = {
@@ -97,7 +97,7 @@ function renderCalender() {
 
         // Generate HTML for each task as a separate span
         let taskSpans = tasksForDate.map(task =>
-            `<span onclick="ShowModal(this)" data-task='${JSON.stringify(task)}' 
+            `<span id="${task.id}" onclick="ShowModal(this)" data-task='${JSON.stringify(task)}' 
              data-modal-target="crud-modal" data-modal-toggle="crud-modal" 
              class="text-sm z-30 ${i == today.getDate() && date.getMonth() == today.getMonth() ? 'bg-gray-300 text-black hover:bg-gray-600' : 'bg-purple-800 text-white hover:bg-purple-950'}   w-full 
              bottom-0 left-0 appTask  cursor-pointer spans border border-gray-400"> 
@@ -284,7 +284,7 @@ function ShowModal(element) {
     let name = task.task
     let date = task.date
     let text = task.text
-    console.log(task);
+    // console.log(task);
 
     var appTask = document.querySelector("#showTask")
     var appDate = document.querySelector("#showDate")
@@ -327,7 +327,12 @@ function ShowModal(element) {
     });
 }
 
-    
+// function ChangeStatus(task) {
+//     let logo = task.innerHTML
+//     console.log(logo);
+
+
+// }
 
 
 renderTable()
