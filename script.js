@@ -1,5 +1,46 @@
 // console.log("Adan khan");
 
+
+
+/*
+ * $targetEl (required)
+ * options (optional)
+ * instanceOptions (optional)
+ */
+const $targetEl = document.getElementById('drawer-js-example');
+
+
+console.log($targetEl);
+
+// options with default values
+const options = {
+    placement: 'right',
+    backdrop: true,
+    bodyScrolling: false,
+    edge: false,
+    edgeOffset: '',
+    backdropClasses:
+        'bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30',
+    onHide: () => {
+        console.log('drawer is hidden');
+    },
+    onShow: () => {
+        console.log('drawer is shown');
+    },
+    onToggle: () => {
+        console.log('drawer has been toggled');
+    },
+};
+
+// instance options object
+const instanceOptions = {
+    id: 'drawer-js-example',
+    override: true
+};
+
+
+const drawer = new Drawer($targetEl, options, instanceOptions);
+
 var date = new Date()
 
 function renderCalender() {
@@ -68,11 +109,8 @@ function renderCalender() {
         if (i == today.getDate() && date.getMonth() == today.getMonth()) {
             days += ` 
                 <div class="border relative flex flex-col justify-center items-start bg-gray-300">
-                    <div data-drawer-target="drawer-right-example" 
-                         data-drawer-show="drawer-right-example"
-                         data-drawer-placement="right" 
-                         aria-controls="drawer-right-example" 
-                         onclick="LogDays('${dayString}')"
+                    <div 
+                         onclick="LogDays('${dayString}'); drawer.show()" 
                          class="text-sm w-[100%] h-[100%] p-2 bg-purple-800 text-white flex font-semibold justify-center items-start cursor-pointer">
                          ${i}
                     </div>
@@ -82,11 +120,7 @@ function renderCalender() {
 
             days += ` 
                 <div class="border relative flex flex-col justify-center items-start bg-gray-300">
-                    <div data-drawer-target="drawer-right-example" 
-                         data-drawer-show="drawer-right-example"
-                         data-drawer-placement="right" 
-                         aria-controls="drawer-right-example" 
-                         onclick="LogDays('${dayString}')"
+                    <div onclick="LogDays('${dayString}'); drawer.show()"
                          class="text-sm w-[100%] h-[100%] p-2 bg-gray-300 flex font-semibold justify-center items-start cursor-pointer">
                          ${i}
                     </div>
@@ -209,7 +243,6 @@ function deleteTask(index) {
     let data = JSON.parse(localStorage.getItem('task')) || []
 
     data.splice(index, 1)
-    location.reload();
     localStorage.setItem('task', JSON.stringify(data))
     renderTable()
     renderCalender()
@@ -294,15 +327,8 @@ function ShowModal(element) {
     });
 }
 
+    
 
-// document.getElementsByClassName('delBtn').addEventListener('click', function () {
-//     renderCalender()
-// })
-document.querySelector("#nextBtn").addEventListener('click', () => {
-    renderCalender()
-    console.log("btn Clicked");
-
-})
 
 renderTable()
 renderCalender()   
