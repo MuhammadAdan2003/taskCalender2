@@ -1,0 +1,199 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="output.css">
+
+</head>
+
+
+<body class="bg-slate-600 h-screen">
+  <!-- drawer button -->
+  <!-- <div class="text-end px-4 mt-1">
+    <button
+      class="text-white bg-purple-800 hover:bg-purple-900 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
+      type="button" data-drawer-target="drawer-right-example" data-drawer-show="drawer-right-example"
+      data-drawer-placement="right" aria-controls="drawer-right-example">
+      Add new task
+    </button>
+  </div> -->
+
+  <div id="wrapper" class="w-full h-[100%] flex justify-center items-center">
+    <div class="w-[90%] bg-white rounded-lg shadow-lg mt-5">
+      <!-- Card Header -->
+      <div class="bg-purple-800 text-white text-center py-4">
+        <div class="flex justify-around items-center">
+          <i id="prevBtn" class="ri-arrow-left-line text-3xl cursor-pointer" onclick="moveCalender('prev')"></i>
+          <h2 class="text-3xl font-semibold" id="CurrMonth"></h2>
+          <i id="nextBtn" class="ri-arrow-right-line text-3xl cursor-pointer" onclick="moveCalender('next')"></i>
+        </div>
+      </div>
+
+      <!-- Days of the Week -->
+      <div class="grid grid-cols-7 text-center font-semibold text-gray-600 py-2 border-b">
+        <div>Sun</div>
+        <div>Mon</div>
+        <div>Tue</div>
+        <div>Wed</div>
+        <div>Thu</div>
+        <div>Fri</div>
+        <div>Sat</div>
+      </div>
+
+      <!-- Calendar Days -->
+      <div id="AppendDays" class="grid grid-cols-7 h-[78vh] text-center">
+        <!-- Days of the Month -->
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- drawer component -->
+
+  <div id="drawer-right-example"
+    class="fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform translate-x-full bg-white w-[40%] dark:bg-gray-800"
+    tabindex="-1" aria-labelledby="drawer-right-label">
+    <div class="text-end">
+      <button type="button" data-drawer-hide="drawer-right-example" aria-controls="drawer-right-example"
+        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 absolute top-2.5 end-2.5 inline-flex items-center justify-center dark:hover:bg-gray-600 dark:hover:text-white">
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+        </svg>
+        <span class="sr-only">Close menu</span>
+      </button>
+    </div>
+    <form class="mt-8">
+
+      <h1 class="text-2xl mb-5 font-semibold"> Add Task and description </h1>
+      <div class="mb-5">
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Add task name</label>
+        <input type="text" id="task"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Write your Task" required />
+      </div>
+
+      <div class="mb-5">
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Add
+          Description</label>
+        <textarea id="message" rows="4"
+          class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Add description..."></textarea>
+      </div>
+
+      <div class="mb-5">
+        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Add task Date</label>
+        <input type="date" id="date"
+          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          required />
+      </div>
+
+      <button id="submit-btn" type="submit" onclick="logDAta()"
+        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+    </form>
+  </div>
+
+
+  <!-- tabel start  -->
+
+  <!-- table end -->
+  <!-- modal component Started -->
+
+  <!-- Main modal -->
+  <div id="crud-modal" tabindex="-1" aria-hidden="true"
+    class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+    <div class="relative p-4 w-full max-w-md max-h-full">
+      <!-- Modal content -->
+      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+        <!-- Modal header -->
+        <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+            Task
+          </h3>
+          <button type="button"
+            class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+            data-modal-toggle="crud-modal">
+            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+            </svg>
+            <!-- <span class="sr-only">Close modal</span> -->
+          </button>
+        </div>
+        <!-- Modal body -->
+        <form class="p-4 md:p-5">
+
+          <div class="mb-5">
+            <label for="task" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Task name</label>
+            <input type="text" id="showTask"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Write your Task" readonly />
+          </div>
+
+          <div class="mb-5">
+            <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+              Description</label>
+            <textarea id="ShowMessage" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 
+              focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 
+              dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Add description..."
+              readonly></textarea>
+
+          </div>
+
+          <div class="mb-5">
+            <label for="taskDate" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Task Date</label>
+            <input type="date" id="showDate"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Write your Task" readonly />
+          </div>
+
+          <div class="btn-div">
+            <button type="button" id="compBTN" data-modal-toggle="crud-modal"
+              class="focus:outline-none text-white bg-purple-800 hover:bg-purple-900 focus:ring-4 focus:ring-purple-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-purple-900">Complete
+              task</button>
+            <button type="button" id="DelBTN" data-modal-toggle="crud-modal"
+              class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-500 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-red-400">Remove</button>
+
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="table--div">
+    <h1 class="text-2xl text-white font-bold text-center mb-5">Task Table</h1>
+    <div class="w-[80%] relative overflow-x-auto shadow-md sm:rounded-lg mx-auto mb-6 h">
+      <table class="text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 w-[100%]">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+          <tr>
+            <th scope="col" class="px-6 py-3 text-center">
+              Task name
+            </th>
+            <th scope="col" class="px-6 py-3 text-center">
+              Task Date
+            </th>
+            <th scope="col" class="px-6 py-3 text-center">
+              Edit
+            </th>
+            <th scope="col" class="px-6 py-3 text-center">
+              Delete
+            </th>
+
+          </tr>
+        </thead>
+        <tbody id="tBody">
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
