@@ -1,0 +1,1 @@
+data-modal-target="crud-modal" data-modal-toggle="crud-modal" 

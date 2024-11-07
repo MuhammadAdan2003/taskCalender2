@@ -7,20 +7,16 @@
  * options (optional)
  * instanceOptions (optional)
  */
-const $targetEl = document.getElementById('drawer-js-example');
+// Drawer setup
+const $drawerEl = document.getElementById('drawer-js-example');
 
-
-// console.log($targetEl);
-
-// options with default values
-const options = {
+const drawerOptions = {
     placement: 'right',
-    backdrop: true,
+    backdrop: true, // or false based on your need
     bodyScrolling: false,
     edge: false,
     edgeOffset: '',
-    backdropClasses:
-        'bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30',
+    backdropClasses: 'bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30',
     onHide: () => {
         console.log('drawer is hidden');
     },
@@ -32,14 +28,40 @@ const options = {
     },
 };
 
-// instance options object
-const instanceOptions = {
+const drawerInstanceOptions = {
     id: 'drawer-js-example',
     override: true
 };
 
+// Assuming you have a Drawer constructor or class
+const drawer = new Drawer($drawerEl, drawerOptions, drawerInstanceOptions);
 
-const drawer = new Drawer($targetEl, options, instanceOptions);
+// Modal setup
+const $modalEl = document.getElementById('modalEl');
+
+const modalOptions = {
+    placement: 'bottom-right',
+    backdrop: true, // boolean true or false for showing backdrop
+    backdropClasses: 'bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-40',
+    closable: true,
+    onHide: () => {
+        console.log('modal is hidden');
+    },
+    onShow: () => {
+        console.log('modal is shown');
+    },
+    onToggle: () => {
+        console.log('modal has been toggled');
+    }
+};
+
+// Assuming you have a Modal constructor or class
+const modal = new Modal($modalEl, modalOptions);
+
+// Initialize modal behavior (optional if using dynamic backdrop)
+// modal.show(); // or modal.toggle();
+
+
 
 var date = new Date()
 
@@ -83,6 +105,7 @@ function renderCalender() {
 
 
     for (let i = 1; i <= endMonth; i++) {
+
         let tasksForDate = [];
         let data = JSON.parse(localStorage.getItem('task'));
         let year = date.getFullYear();
@@ -92,15 +115,13 @@ function renderCalender() {
 
 
 
-        // Filter tasks that match the current date
         tasksForDate = data.filter(task => task.date === dayString);
 
-        // Generate HTML for each task as a separate span
         let taskSpans = tasksForDate.map(task =>
-            `<span id="${task.id}" onclick="ShowModal(this)" data-task='${JSON.stringify(task)}' 
-             data-modal-target="crud-modal" data-modal-toggle="crud-modal" 
-             class="text-sm z-30 ${i == today.getDate() && date.getMonth() == today.getMonth() ? 'bg-gray-300 text-black hover:bg-gray-600' : 'bg-purple-800 text-white hover:bg-purple-950'}   w-full 
-             bottom-0 left-0 appTask  cursor-pointer spans border border-gray-400"> 
+            `<span id="${task.id}" onclick="getSpanValue(this); ShowModal(this);" data-task='${JSON.stringify(task)}' 
+              
+             class="text-sm z-30 ${i == today.getDate() && date.getMonth() == today.getMonth() ? 'bg-gray-300 text-black hover:bg-gray-600' : task.Status == "Completed" ? 'bg-[#0b8043] hover:bg-green-900 text-white' : 'bg-purple-800 text-white hover:bg-purple-950'} w-full 
+             bottom-0 left-0 appTask  cursor-pointer spans border border-gray-400 font-semibold"> 
              ${task.task}
              </span>`
         ).join('');
@@ -108,7 +129,7 @@ function renderCalender() {
 
         if (i == today.getDate() && date.getMonth() == today.getMonth()) {
             days += ` 
-                <div class="border relative flex flex-col justify-center items-start bg-gray-300">
+                <div class="border relative flex flex-col justify-center items-start bg-white">
                     <div 
                          onclick="LogDays('${dayString}'); drawer.show()" 
                          class="text-sm w-[100%] h-[100%] p-2 bg-purple-800 text-white flex font-semibold justify-center items-start cursor-pointer">
@@ -119,9 +140,9 @@ function renderCalender() {
         } else {
 
             days += ` 
-                <div class="border relative flex flex-col justify-center items-start bg-gray-300">
+                <div class="border relative h-[100px] overflow-auto flex flex-col justify-center items-start bg-gray-300">
                     <div onclick="LogDays('${dayString}'); drawer.show()"
-                         class="text-sm w-[100%] h-[100%] p-2 bg-gray-300 flex font-semibold justify-center items-start cursor-pointer">
+                         class="text-sm w-[100%] h-[100%] p-2 bg-white flex font-semibold justify-center items-start cursor-pointer">
                          ${i}
                     </div>
                     <div class="flex flex-col w-[100%]">${taskSpans}</div>
@@ -139,8 +160,6 @@ function renderCalender() {
 
     document.querySelector("#AppendDays").innerHTML = days;
 }
-
-
 
 
 if (!localStorage.getItem("task")) {
@@ -213,6 +232,7 @@ function renderTable() {
     let output = ""
 
     data.forEach((elem, index) => {
+
         output +=
             `<tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
             
@@ -249,34 +269,13 @@ function deleteTask(index) {
 
 }
 
-
 document.querySelector("#submit-btn").addEventListener('click', () => {
     renderTable();
     renderCalender()
     initializeDrawer();
 })
 
-
 renderCalender()
-// function textChange() {
-//     let spans = document.querySelectorAll(".spans");
-
-//     spans.forEach(span => {
-//         let originalText = span.innerHTML;
-
-//         span.addEventListener('mouseenter', () => {
-//             span.innerHTML = "view task <i class='ri-eye-fill ml-1'></i>";
-//         });
-
-//         span.addEventListener('mouseleave', () => {
-//             span.innerHTML = originalText;
-//         });
-//     });
-// }
-
-
-
-// textChange()
 
 function ShowModal(element) {
 
@@ -284,7 +283,6 @@ function ShowModal(element) {
     let name = task.task
     let date = task.date
     let text = task.text
-    // console.log(task);
 
     var appTask = document.querySelector("#showTask")
     var appDate = document.querySelector("#showDate")
@@ -294,46 +292,65 @@ function ShowModal(element) {
     appDate.value = date
     appDescription.value = text
 
-    document.querySelector("#compBTN").addEventListener('click', () => {
-        if (task.Status === "Incomplete") {
-
-            task = {
-                ...task,
-                Status: "Completed"
-
-            };
-
-        }
-        let tasks = JSON.parse(localStorage.getItem('task')) || []; // default to an empty array if nothing is in localStorage
-
-        const taskIndex = tasks.findIndex(t => t.id === task.id); // Assuming `id` is the unique identifier for each task
-        if (taskIndex !== -1) {
-            tasks[taskIndex] = task; // Update the task at the found index
-        }
-
-        localStorage.setItem('task', JSON.stringify(tasks));
-    });
-
-    document.querySelector("#DelBTN").addEventListener('click', () => {
-        let data = JSON.parse(localStorage.getItem('task'));
-        const taskIndex = data.findIndex(t => t.date === task.date && t.task === task.task); // Find task index
-        if (taskIndex !== -1) {
-            data.splice(taskIndex, 1);
-            localStorage.setItem('task', JSON.stringify(data));
-
-            element.remove();
-
-        }
-    });
+    console.log(task);
+    // const modal = document.getElementById('crud-modal');
+    // modal.classList.remove('hidden');
+    modal.show()
 }
 
-// function ChangeStatus(task) {
-//     let logo = task.innerHTML
-//     console.log(logo);
+let spanText;
+let taskData;
+let taskObject;
+let spanTextHTML;
 
 
-// }
+function getSpanValue(spanElement) {
+    spanTextHTML = spanElement
+    spanText = spanElement.innerText;
+    console.log("Span Text:", spanText);
+    taskData = spanElement.getAttribute("data-task");
+    taskObject = JSON.parse(taskData);
+}
 
+document.querySelector("#compBTN").addEventListener('click', () => {
+    if (taskObject.Status === "Incomplete") {
+
+        taskObject = {
+            ...taskObject,
+            Status: "Completed"
+
+        };
+
+    }
+    let tasks = JSON.parse(localStorage.getItem('task')) || []; // default to an empty array if nothing is in localStorage
+
+    const taskIndex = tasks.findIndex(t => t.id === taskObject.id); // Assuming `id` is the unique identifier for each task
+    if (taskIndex !== -1) {
+        tasks[taskIndex] = taskObject;
+    }
+
+    localStorage.setItem('task', JSON.stringify(tasks));
+
+    renderCalender()
+    renderTable()
+});
+
+document.querySelector("#DelBTN").addEventListener('click', () => {
+
+
+    let data = JSON.parse(localStorage.getItem('task'));
+    const taskIndex = data.findIndex(t => t.date === taskObject.date && t.task === taskObject.task); // Find task index
+    if (taskIndex !== -1) {
+        data.splice(taskIndex, 1);
+        localStorage.setItem('task', JSON.stringify(data));
+
+        spanTextHTML.remove();
+        renderCalender()
+        renderTable()
+        console.log(spanTextHTML);
+    }
+
+});
 
 renderTable()
 renderCalender()   
