@@ -7,26 +7,25 @@
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.5.0/fonts/remixicon.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="output.css">
+  <link href='https://fonts.googleapis.com/css?family=Akaya Telivigala' rel='stylesheet'>
+
   <title>Document</title>
+  <style>
+    body {
+      font-family: 'Almendra';
+    }
+  </style>
 
 </head>
 
 
-<body class="bg-slate-600 h-screen">
-  <!-- drawer button -->
-  <!-- <div class="text-end px-4 mt-1">
-    <button
-      class="text-white bg-purple-800 hover:bg-purple-900 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
-      type="button" data-drawer-target="drawer-right-example" data-drawer-show="drawer-right-example"
-      data-drawer-placement="right" aria-controls="drawer-right-example">
-      Add new task
-    </button>
-  </div> -->
+<body class="bg-slate-600">
 
-  <div id="wrapper" class="w-full h-[100%] flex justify-center items-center ">
-    <div class="w-[90%] bg-white rounded-lg shadow-lg mt-5">
+  <!-- Calender Component -->
+  <div id="wrapper" class="w-full flex justify-center items-center mt-3">
+    <div class="w-[90%] bg-white rounded-lg shadow-lg">
       <!-- Card Header -->
-      <div class="bg-purple-800 rounded-lg text-white text-center py-4">
+      <div class="bg-purple-800 text-white text-center py-4">
         <div class="flex justify-around items-center">
           <i id="prevBtn" class="ri-arrow-left-line text-3xl cursor-pointer" onclick="moveCalender('prev')"></i>
           <h2 class="text-3xl font-semibold" id="CurrMonth"></h2>
@@ -46,16 +45,15 @@
       </div>
 
       <!-- Calendar Days -->
-      <div id="AppendDays" class="grid grid-cols-7 h-[78vh] text-center">
+      <div id="AppendDays" class="grid grid-cols-7 gap-0 text-center">
         <!-- Days of the Month -->
       </div>
 
     </div>
   </div>
-
+  <!-- End Calender  -->
 
   <!-- drawer component -->
-
   <div id="drawer-js-example"
     class="fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform translate-x-full bg-white w-[40%] dark:bg-gray-800"
     tabindex="-1" aria-labelledby="drawer-right-label">
@@ -94,16 +92,12 @@
           required />
       </div>
 
-      <button id="submit-btn" type="submit" onclick="logDAta()"
+      <button id="submit-btn" type="submit" onclick="logDAta()" data-drawer-hide="drawer-js-example"
+        aria-controls="drawer-js-example"
         class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
     </form>
   </div>
-
-
-  <!-- tabel start  -->
-
-  <!-- table end -->
-  <!-- modal component Started -->
+  <!-- End Drawer  -->
 
   <!-- Main modal -->
   <div id="modalEl" tabindex="-1" aria-hidden="true"
@@ -154,8 +148,8 @@
           </div>
 
           <div class="btn-div">
-            <button type="button" id="compBTN" data-modal-toggle="modalEl" onclick="renderCalender()"
-              class="focus:outline-none text-white bg-purple-800 hover:bg-purple-900 focus:ring-4 focus:ring-purple-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-purple-900">Complete
+            <button type="button" data-modal-toggle="modalEl" onclick="renderCalender()"
+              class="compBTN focus:outline-none text-white bg-purple-800 hover:bg-purple-900 focus:ring-4 focus:ring-purple-900 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-purple-900">Complete
               task</button>
             <button type="button" id="DelBTN" data-modal-toggle="modalEl"
               class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-500 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:focus:ring-red-400">Remove</button>
@@ -166,33 +160,39 @@
       </div>
     </div>
   </div>
+  <!-- End Modal  -->
+  <!-- table Started  -->
 
-  <div class="table--div">
-    <h1 class="text-2xl text-white font-bold text-center mb-5">Task Table</h1>
-    <div class="w-[80%] relative overflow-x-auto shadow-md sm:rounded-lg mx-auto mb-6 h">
-      <table class="text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 w-[100%]">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-          <tr>
-            <th scope="col" class="px-6 py-3 text-center">
-              Task name
-            </th>
-            <th scope="col" class="px-6 py-3 text-center">
-              Task Date
-            </th>
-            <th scope="col" class="px-6 py-3 text-center">
-              Edit
-            </th>
-            <th scope="col" class="px-6 py-3 text-center">
-              Delete
-            </th>
+  <div class="table-div mt-9">
+    <div class="table--div">
+      <h1 class="text-2xl text-white font-bold text-center mb-5">Task Table</h1>
+      <div class="w-[80%] relative overflow-x-auto shadow-md sm:rounded-lg mx-auto mb-6 h">
+        <table class="text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 w-[100%]">
+          <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-center">
+                Task name
+              </th>
+              <th scope="col" class="px-6 py-3 text-center">
+                Task Date
+              </th>
+              <th scope="col" class="px-6 py-3 text-center">
+                Description
+              </th>
+              <th scope="col" class="px-6 py-3 text-center">
+                Delete
+              </th>
 
-          </tr>
-        </thead>
-        <tbody id="tBody">
-        </tbody>
-      </table>
+            </tr>
+          </thead>
+          <tbody id="tBody">
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
+
+  <!-- End Table  -->
   <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
   <script type="module">
     import { Drawer } from 'flowbite';

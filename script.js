@@ -120,14 +120,14 @@ function renderCalender() {
         let taskSpans = tasksForDate.map(task =>
             `<span id="${task.id}" onclick="getSpanValue(this); ShowModal(this);" data-task='${JSON.stringify(task)}' 
               
-             class="text-sm z-30 ${i == today.getDate() && date.getMonth() == today.getMonth() ? 'bg-gray-300 text-black hover:bg-gray-600' : task.Status == "Completed" ? 'bg-[#0b8043] hover:bg-green-900 text-white' : 'bg-purple-800 text-white hover:bg-purple-950'} w-full 
-             bottom-0 left-0 appTask  cursor-pointer spans border border-gray-400 font-semibold"> 
+             class="text-[14px] leading-[18px] z-30 ${i == today.getDate() && date.getMonth() == today.getMonth() ? 'bg-gray-300 text-black hover:bg-gray-600' : task.Status == "Completed" ? 'bg-[#0b8043] hover:bg-green-900 text-white' : 'bg-purple-800 text-white hover:bg-purple-950'} w-full 
+             bottom-0 left-0 appTask cursor-pointer spans border border-gray-400 "> 
+
              ${task.task}
              </span>`
         ).join('');
 
-
-        if (i == today.getDate() && date.getMonth() == today.getMonth()) {
+        if (i == today.getDate() && date.getMonth() == today.getMonth() && date.getFullYear() === today.getFullYear()) {
             days += ` 
                 <div class="border relative flex flex-col justify-center items-start bg-white">
                     <div 
@@ -140,13 +140,18 @@ function renderCalender() {
         } else {
 
             days += ` 
-                <div class="border relative h-[100px] overflow-auto flex flex-col justify-center items-start bg-gray-300">
-                    <div onclick="LogDays('${dayString}'); drawer.show()"
-                         class="text-sm w-[100%] h-[100%] p-2 bg-white flex font-semibold justify-center items-start cursor-pointer">
-                         ${i}
-                    </div>
-                    <div class="flex flex-col w-[100%]">${taskSpans}</div>
-                </div>`;
+                <div class="border relative h-[95px] flex flex-col justify-center items-start bg-gray-300">
+    <div onclick="LogDays('${dayString}'); 
+                  new Date('${dayString}') >= new Date().setHours(0, 0, 0, 0) 
+                      ? drawer.show() 
+                      : alert('Cannot add a task on a past date');"
+         class="text-sm w-[100%] h-[100%] p-2 bg-white flex font-semibold justify-center items-start cursor-pointer">
+         ${i}
+    </div>
+    <div class="flex flex-col w-[100%]">${taskSpans}</div>
+</div>
+
+`;
         }
     }
 
@@ -186,27 +191,39 @@ function LogDays(dayString) {
 
 }
 
+// function WrongDate(){
+
+// }
 
 function logDAta() {
     var id = Math.floor(10000 + Math.random() * 90000);
-    var task = document.querySelector("#task").value
-    var date = document.querySelector("#date").value
-    var text = document.querySelector("#message").value
-    var addTaskDate = new Date()
+    var task = ""
+    task = document.querySelector("#task").value;
+    var date = ""
+    date = document.querySelector("#date").value;
+    var text = document.querySelector("#message").value;
+    var addTaskDate = new Date();
     var taskDate = new Date(date);
+    var drawer = document.querySelector("#drawer-js-example");
 
-    addTaskDate.setHours(0, 0, 0, 0)
-    // console.log(date2);
+    addTaskDate.setHours(0, 0, 0, 0);
+    taskDate.setHours(0, 0, 0, 0);
 
-    if (task == "" || date == "") {
-        alert("please insert a task")
-        return
-
+    if (task === "" || date === "") {
+        alert("Please insert a task");
+        return;
+    } else if (taskDate < addTaskDate) {
+        alert("You cannot choose a previous date to add a new task");
+        return;
     }
 
-    else if (taskDate < addTaskDate) {
-        alert("you cannot choose privious date to add a new task")
-        return
+    var tasks = JSON.parse(localStorage.getItem('task')) || [];
+
+    var tasksForDate = tasks.filter(task => task.date === date);
+
+    if (tasksForDate.length >= 3) {
+        alert("You can't add more than 3 tasks on same date.");
+        return;
     }
 
     const taskObj = {
@@ -215,16 +232,14 @@ function logDAta() {
         text: text,
         id: id,
         Status: "Incomplete"
-    }
+    };
+
     console.log(taskObj);
 
-    var val = JSON.parse(localStorage.getItem('task'))
-
-    val.push(taskObj)
-
-    localStorage.setItem('task', JSON.stringify(val))
-
+    tasks.push(taskObj);
+    localStorage.setItem('task', JSON.stringify(tasks));
 }
+
 
 function renderTable() {
 
@@ -242,9 +257,10 @@ function renderTable() {
             <td class="px-6 py-4 text-center">          
               ${elem.date}
             </td>
-              <td class="px-6 py-4 text-center">
-                  <a href="#" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-              </td>                                 
+               <td class="px-6 py-4 text-center">
+                    ${elem.text === "" ? "No Description has been added" : elem.text}
+</td>
+                            
                 <td class="px-6 py-4 text-center ">
               <button onclick="deleteTask(${index})" class="bg-red-500 delBtn text-white font-semibold py-2 px-4 rounded hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-400 focus:ring-opacity-75">
                 Delete
@@ -273,6 +289,7 @@ document.querySelector("#submit-btn").addEventListener('click', () => {
     renderTable();
     renderCalender()
     initializeDrawer();
+    drawer.hide()
 })
 
 renderCalender()
@@ -296,6 +313,15 @@ function ShowModal(element) {
     // const modal = document.getElementById('crud-modal');
     // modal.classList.remove('hidden');
     modal.show()
+
+    const completeButton = document.querySelector(".compBTN");
+
+    // Enable or disable the button based on the task's status
+    if (task.Status === "Completed") {
+        completeButton.setAttribute('disabled', true);
+    } else {
+        completeButton.removeAttribute('disabled');
+    }
 }
 
 let spanText;
@@ -312,7 +338,7 @@ function getSpanValue(spanElement) {
     taskObject = JSON.parse(taskData);
 }
 
-document.querySelector("#compBTN").addEventListener('click', () => {
+document.querySelector(".compBTN").addEventListener('click', () => {
     if (taskObject.Status === "Incomplete") {
 
         taskObject = {
@@ -333,6 +359,7 @@ document.querySelector("#compBTN").addEventListener('click', () => {
 
     renderCalender()
     renderTable()
+
 });
 
 document.querySelector("#DelBTN").addEventListener('click', () => {
@@ -352,5 +379,19 @@ document.querySelector("#DelBTN").addEventListener('click', () => {
 
 });
 
+
+
+// function buttonDisabled() {
+//     let data = JSON.parse(localStorage.getItem('task'))
+
+//     data.forEach((val) => {
+//         if (val.Status === "Completed") {
+
+//         }
+//     })
+
+// }
+
+// buttonDisabled()
 renderTable()
 renderCalender()   
